@@ -1,0 +1,69 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+---
+
+<Layout title="Le Festival - SAVOU'FEST">
+  <Header subtitle="Le Festival" />
+
+  <main class="festival-page">
+    <section class="intro-card">
+      <h2>Notre histoire</h2>
+      <p>
+        SAVOU'FEST est ne de l'envie de rassembler les publics autour de trois univers
+        musicaux: Electro, Hip-Hop et Pop.
+      </p>
+      <p>
+        Chaque edition met en avant des artistes emergents et confirmes dans une
+        ambiance conviviale, festive et accessible.
+      </p>
+    </section>
+
+    <section class="intro-card">
+      <h2>Nos valeurs</h2>
+      <p>Inclusivite, partage, creativite et respect du public comme des artistes.</p>
+      <p>
+        Nous travaillons avec des partenaires locaux pour proposer un evenement
+        responsable et durable.
+      </p>
+    </section>
+
+    <section class="intro-card">
+      <h2>L'equipe</h2>
+      <p>
+        Une equipe passionnee de benevoles, de techniciens et d'organisateurs donne
+        vie au festival toute l'annee.
+      </p>
+      <p>Rendez-vous du 15 au 17 aout 2025 pour la prochaine edition.</p>
+    </section>
+  </main>
+</Layout>
+
+<style>
+  .festival-page {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem 3rem;
+    display: grid;
+    gap: 1.5rem;
+    background: #f5f5f5;
+  }
+
+  .intro-card {
+    background: white;
+    border-radius: 14px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  }
+
+  .intro-card h2 {
+    margin: 0 0 0.8rem;
+    color: #ff6b3c;
+  }
+
+  .intro-card p {
+    margin: 0.5rem 0;
+    color: #333;
+    line-height: 1.55;
+  }
+</style>

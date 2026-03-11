@@ -12,7 +12,7 @@ const { id } = Astro.params;
 const artiste = await getArtisteById(id);
 
 if (!artiste) {
-  throw new Error("Artiste introuvable");
+  return Astro.redirect("/artistes");
 }
 
 const representations = artiste.representations || [];

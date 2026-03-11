@@ -10,6 +10,8 @@ const genre = Astro.url.searchParams.get("genre");
 
 let artistes = await getAllArtistesSortedByDate();
 
+artistes = artistes.filter((item) => item?.artiste?.id);
+
 if (genre && genre !== "Tous") {
   artistes = artistes.filter((item) => item.artiste?.genre === genre);
 }
@@ -66,7 +68,7 @@ function formatDate(dateString) {
         artistes.length > 0 ? (
           artistes.map((item) => {
             const artiste = item.artiste;
-            const dateTexte = formatDate(item.date);
+            const dateTexte = formatDate(item.date_debut);
             const heureTexte = item.heure_debut ? ` - ${item.heure_debut}` : "";
 
             return (

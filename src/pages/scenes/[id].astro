@@ -10,7 +10,7 @@ const { id } = Astro.params;
 const scene = await getSceneById(id);
 
 if (!scene) {
-  throw new Error("Scène introuvable");
+  return Astro.redirect("/scenes");
 }
 
 const representations = scene.representations || [];

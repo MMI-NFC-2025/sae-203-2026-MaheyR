@@ -2,11 +2,22 @@ import PocketBase from 'pocketbase'
 
 const pb = new PocketBase('https://sae-203-savoufest.maheyralambo.fun:443')
 
+function logPocketBaseError(scope, error) {
+  console.error(`[PocketBase:${scope}]`, error)
+}
+
 export async function getAllArtistesSortedByDate() {
-  const representations = await pb.collection('representations').getFullList({
-    sort: 'date_debut',
-    expand: 'artiste,scene'
-  })
+  let representations = []
+
+  try {
+    representations = await pb.collection('representations').getFullList({
+      sort: 'date_debut',
+      expand: 'artiste,scene'
+    })
+  } catch (error) {
+    logPocketBaseError('getAllArtistesSortedByDate', error)
+    return []
+  }
 
   return representations.map((rep) => ({
     id_representation: rep.id,
@@ -18,23 +29,45 @@ export async function getAllArtistesSortedByDate() {
 }
 
 export async function getAllScenesSortedByName() {
-  return await pb.collection('scenes').getFullList({
-    sort: 'nom'
-  })
+  try {
+    return await pb.collection('scenes').getFullList({
+      sort: 'nom'
+    })
+  } catch (error) {
+    logPocketBaseError('getAllScenesSortedByName', error)
+    return []
+  }
 }
 export async function getAllArtistesSortedAlphabetically() {
-  return await pb.collection('artistes').getFullList({
-    sort: 'nom'
-  })
+  try {
+    return await pb.collection('artistes').getFullList({
+      sort: 'nom'
+    })
+  } catch (error) {
+    logPocketBaseError('getAllArtistesSortedAlphabetically', error)
+    return []
+  }
 }
 export async function getArtisteById(id) {
-  const artiste = await pb.collection('artistes').getOne(id)
+  let artiste
 
-  const representations = await pb.collection('representations').getFullList({
-    filter: `artiste = "${id}"`,
-    sort: 'date_debut',
-    expand: 'scene'
-  })
+  try {
+    artiste = await pb.collection('artistes').getOne(id)
+  } catch (error) {
+    logPocketBaseError('getArtisteById.getOne', error)
+    return null
+  }
+
+  let representations = []
+  try {
+    representations = await pb.collection('representations').getFullList({
+      filter: `artiste = "${id}"`,
+      sort: 'date_debut',
+      expand: 'scene'
+    })
+  } catch (error) {
+    logPocketBaseError('getArtisteById.getRepresentations', error)
+  }
 
   return {
     ...artiste,
@@ -45,13 +78,25 @@ export async function getArtisteById(id) {
 
 
 export async function getSceneById(id) {
-  const scene = await pb.collection('scenes').getOne(id)
+  let scene
 
-  const representations = await pb.collection('representations').getFullList({
-    filter: `scene = "${id}"`,
-    sort: 'date_debut',
-    expand: 'artiste'
-  })
+  try {
+    scene = await pb.collection('scenes').getOne(id)
+  } catch (error) {
+    logPocketBaseError('getSceneById.getOne', error)
+    return null
+  }
+
+  let representations = []
+  try {
+    representations = await pb.collection('representations').getFullList({
+      filter: `scene = "${id}"`,
+      sort: 'date_debut',
+      expand: 'artiste'
+    })
+  } catch (error) {
+    logPocketBaseError('getSceneById.getRepresentations', error)
+  }
 
   return {
     ...scene,
@@ -60,11 +105,17 @@ export async function getSceneById(id) {
 }
 
 export async function getArtistesBySceneId(id) {
-  const representations = await pb.collection('representations').getFullList({
-    filter: `scene = "${id}"`,
-    sort: 'date_debut',
-    expand: 'artiste,scene'
-  })
+  let representations = []
+  try {
+    representations = await pb.collection('representations').getFullList({
+      filter: `scene = "${id}"`,
+      sort: 'date_debut',
+      expand: 'artiste,scene'
+    })
+  } catch (error) {
+    logPocketBaseError('getArtistesBySceneId', error)
+    return []
+  }
 
   return representations.map((rep) => ({
     id_representation: rep.id,
@@ -76,9 +127,16 @@ export async function getArtistesBySceneId(id) {
 }
 
 export async function getArtistesBySceneName(nomScene) {
-  const result = await pb.collection('scenes').getList(1, 1, {
-    filter: `nom = "${nomScene}"`
-  })
+  let result
+
+  try {
+    result = await pb.collection('scenes').getList(1, 1, {
+      filter: `nom = "${nomScene}"`
+    })
+  } catch (error) {
+    logPocketBaseError('getArtistesBySceneName.getScene', error)
+    return []
+  }
 
   if (result.items.length === 0) {
     return []
@@ -95,9 +153,19 @@ export async function saveItem(collectionName, data, id = null) {
   }
 
   if (id) {
-    return await pb.collection(collectionName).update(id, data)
+    try {
+      return await pb.collection(collectionName).update(id, data)
+    } catch (error) {
+      logPocketBaseError('saveItem.update', error)
+      throw error
+    }
   }
-  return await pb.collection(collectionName).create(data)
+  try {
+    return await pb.collection(collectionName).create(data)
+  } catch (error) {
+    logPocketBaseError('saveItem.create', error)
+    throw error
+  }
 }
 
 export default pb
