@@ -1,10 +1,418 @@
 ---
 import Layout from '../layouts/Layout.astro';
-
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+import Header from '../components/Header.astro';
 ---
 
-<Layout>
-	<h1>Welcome to Astro!</h1>
+<Layout title="Accueil - SAVOU'FEST">
+	<Header subtitle="Accueil" />
+
+	<main>
+		<section class="hero">
+			<div class="hero-image">
+				<div class="hero-overlay">
+					<h2 class="hero-title">SAVOU'FEST</h2>
+					<p class="hero-date">15 - 17 Août 2025</p>
+				</div>
+			</div>
+		<a href="/infos-pratiques" class="btn-billeterie">Billeterie</a>
+		<section class="info-cards">
+			<div class="card">
+				<div class="card-icon"><img src="/3 Scènes.png" alt="3 Scènes" /></div>
+				<h3>3 Scènes</h3>
+				<p>Electro, Hip-Hop & Pop</p>
+			</div>
+			<div class="card">
+				<div class="card-icon"><img src="/Artistes.jpg" alt="Artistes" /></div>
+				<h3>Artistes</h3>
+				<p>Nationaux & Internationaux</p>
+			</div>
+			<div class="card">
+				<div class="card-icon"><img src="/3 Jours.jpg" alt="3 Jours" /></div>
+				<h3>3 Jours</h3>
+				<p>15-17 Août 2025</p>
+			</div>
+		</section>
+
+		<section class="discover">
+			<h2>Découvrir</h2>
+			<a href="/programme" class="discover-btn discover-btn-orange">
+				<h3>Programme Complet</h3>
+				<p>Découvre tous les artistes et horaires</p>
+			</a>
+			<a href="/artistes" class="discover-btn discover-btn-turquoise">
+				<h3>Liste des Artistes</h3>
+				<p>Les artistes incontournables de cette édition</p>
+			</a>
+			<a href="/festival" class="discover-btn discover-btn-orange">
+				<h3>Le Festival</h3>
+				<p>Notre histoire, nos valeurs et notre équipe</p>
+			</a>
+			<a href="/scenes" class="discover-btn discover-btn-turquoise">
+				<h3>Les Scènes</h3>
+				<p>Découvrez les différentes scènes du festival</p>
+			</a>
+		</section>
+
+		<section class="partners">
+			<h2>Nos Partenaires</h2>
+			<div class="partners-grid">
+				<div class="partner">Radio Groove</div>
+				<div class="partner">Energy Drink Co.</div>
+				<div class="partner">Festival Alliance</div>
+				<div class="partner">City Tours</div>
+			</div>
+		</section>
+	</main>
+
+	<footer class="site-footer">
+		<h3>SAVOU'FEST</h3>
+		<p>contact@savoufest.fr</p>
+		<p>+33 04 ** ** **</p>
+		<div class="social-icons">
+			<a href="#" aria-label="Instagram"><img src="/instagram.png" alt="Instagram" /></a>
+			<a href="#" aria-label="Facebook"><img src="/facebook.png" alt="Facebook" /></a>
+			<a href="#" aria-label="YouTube"><img src="/youtube.png" alt="YouTube" /></a>
+		</div>
+		<p class="footer-legal">Mentions légales • CGV • Confidentialité</p>
+		<p class="footer-copyright">© 2025 SAVOU'FEST</p>
+	</footer>
 </Layout>
+
+<style>
+	* {
+		margin: 0;
+		padding: 0;
+		box-sizing: border-box;
+	}
+
+	.top-header {
+		background: linear-gradient(135deg, #ff9a3c 0%, #ff6b3c 100%);
+		padding: 1rem 1.5rem;
+		color: white;
+		position: relative;
+		overflow: hidden;
+	}
+
+	.header-content {
+		display: grid;
+		grid-template-columns: auto 1fr auto auto;
+		align-items: center;
+		gap: 1rem;
+		max-width: 1200px;
+		margin: 0 auto;
+		position: relative;
+	}
+
+	.header-mascot {
+		height: 80px;
+		width: auto;
+		opacity: 0.9;
+	}
+
+	.header-girl {
+		height: 120px;
+		width: auto;
+		position: absolute;
+		right: 60px;
+		top: -10px;
+	}
+
+	.logo {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+
+	.logo-text {
+		text-align: center;
+	}
+
+	.logo-text h1 {
+		margin: 0;
+		font-size: 1.8rem;
+		font-weight: bold;
+		letter-spacing: 1px;
+	}
+
+	.logo-text p {
+		margin: 0;
+		font-size: 1.1rem;
+		opacity: 0.95;
+		font-weight: 500;
+	}
+
+	.menu-toggle {
+		background: none;
+		border: none;
+		cursor: pointer;
+		display: flex;
+		flex-direction: column;
+		gap: 4px;
+		position: relative;
+		z-index: 10;
+	}
+
+	.menu-toggle span {
+		display: block;
+		width: 30px;
+		height: 3px;
+		background: white;
+		border-radius: 2px;
+	}
+
+	main {
+		max-width: 1200px;
+		margin: 0 auto;
+		background: #f5f5f5;
+	}
+
+	.hero {
+		position: relative;
+		text-align: center;
+	}
+
+	.hero-image {
+		height: 500px;
+		background: url('/HeroVV.png') center center / cover no-repeat;
+		position: relative;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.hero-overlay {
+		position: relative;
+		z-index: 2;
+		color: white;
+		text-align: center;
+		width: 100%;
+	}
+
+	.hero-title {
+		font-size: 7rem;
+		font-weight: bold;
+		margin: 0;
+		letter-spacing: 6px;
+		color: white;
+		text-shadow: 3px 3px 10px rgba(0,0,0,0.8), 0 0 20px rgba(0,0,0,0.5);
+	}
+
+	.hero-date {
+		font-size: 2.5rem;
+		margin: 1.5rem 0 0 0;
+		font-weight: 600;
+		color: white;
+		text-shadow: 2px 2px 8px rgba(0,0,0,0.8), 0 0 15px rgba(0,0,0,0.5);
+	}
+
+	.btn-billeterie {
+		background: linear-gradient(135deg, #ff9a3c 0%, #ff6b3c 100%);
+		color: white;
+		border: none;
+		padding: 1rem 3rem;
+		font-size: 1.2rem;
+		font-weight: bold;
+		border-radius: 30px;
+		cursor: pointer;
+		margin: -2rem auto 0;
+		position: relative;
+		z-index: 3;
+		display: block;
+		text-decoration: none;
+		text-align: center;
+		box-shadow: 0 4px 15px rgba(255, 107, 60, 0.4);
+	}
+
+	.info-cards {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+		gap: 1.5rem;
+		padding: 3rem 1.5rem;
+	}
+
+	@media (min-width: 1024px) {
+		.info-cards {
+			max-width: 900px;
+			margin: 0 auto;
+			padding: 4rem 1.5rem;
+		}
+	}
+
+	.card {
+		background: white;
+		padding: 2rem;
+		border-radius: 15px;
+		box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+		text-align: center;
+	}
+
+	.card-icon {
+		font-size: 3rem;
+		margin-bottom: 1rem;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+
+	.card-icon img {
+		width: 60px;
+		height: 60px;
+		object-fit: contain;
+	}
+
+	.card h3 {
+		font-size: 1.3rem;
+		margin: 0.5rem 0;
+		font-weight: bold;
+	}
+
+	.card p {
+		margin: 0.5rem 0 0;
+		color: #666;
+		font-size: 0.95rem;
+	}
+
+	.discover {
+		padding: 2rem 1.5rem;
+		text-align: center;
+		background: #f5f5f5;
+	}
+
+	@media (min-width: 1024px) {
+		.discover {
+			max-width: 900px;
+			margin: 0 auto;
+			padding: 4rem 1.5rem;
+		}
+	}
+
+	.discover h2 {
+		font-size: 2rem;
+		margin-bottom: 2rem;
+		font-weight: bold;
+		color: #333;
+	}
+
+	.discover-btn {
+		display: block;
+		padding: 2rem;
+		border-radius: 20px;
+		text-decoration: none;
+		color: white;
+		margin-bottom: 1.5rem;
+		box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+	}
+
+	.discover-btn-orange {
+		background: linear-gradient(135deg, #ff9a3c 0%, #ff6b3c 100%);
+	}
+
+	.discover-btn-turquoise {
+		background: linear-gradient(135deg, #00d4d4 0%, #00b4b4 100%);
+	}
+
+	.discover-btn h3 {
+		margin: 0 0 0.5rem 0;
+		font-size: 1.4rem;
+		font-weight: bold;
+	}
+
+	.discover-btn p {
+		margin: 0;
+		opacity: 0.95;
+		font-size: 1rem;
+	}
+
+	.partners {
+		padding: 2rem 1.5rem 3rem;
+		text-align: center;
+		background: #f5f5f5;
+	}
+
+	@media (min-width: 1024px) {
+		.partners {
+			max-width: 900px;
+			margin: 0 auto;
+			padding: 4rem 1.5rem;
+		}
+	}
+
+	.partners h2 {
+		font-size: 2rem;
+		margin-bottom: 2rem;
+		font-weight: bold;
+		color: #333;
+	}
+
+	.partners-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+		gap: 1rem;
+		max-width: 800px;
+		margin: 0 auto;
+	}
+
+	.partner {
+		background: white;
+		padding: 1.5rem;
+		border-radius: 10px;
+		box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+		font-weight: 500;
+	}
+
+	.site-footer {
+		background: linear-gradient(135deg, #00d4d4 0%, #00b4b4 100%);
+		color: white;
+		text-align: center;
+		padding: 3rem 1.5rem 2rem;
+	}
+
+	.site-footer h3 {
+		font-size: 2rem;
+		margin: 0 0 1rem 0;
+		font-weight: bold;
+	}
+
+	.site-footer p {
+		margin: 0.5rem 0;
+		font-size: 0.95rem;
+	}
+
+	.social-icons {
+		display: flex;
+		justify-content: center;
+		gap: 1.5rem;
+		margin: 1.5rem 0;
+	}
+
+	.social-icons a {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 40px;
+		height: 40px;
+		background: rgba(255,255,255,0.2);
+		border-radius: 50%;
+		color: white;
+		text-decoration: none;
+		font-size: 1.2rem;
+	}
+
+	.social-icons a img {
+		width: 24px;
+		height: 24px;
+		object-fit: contain;
+	}
+
+	.footer-legal {
+		font-size: 0.85rem;
+		opacity: 0.9;
+		margin-top: 1.5rem;
+	}
+
+	.footer-copyright {
+		font-size: 0.85rem;
+		opacity: 0.9;
+		margin-top: 0.5rem;
+	}
+</style>

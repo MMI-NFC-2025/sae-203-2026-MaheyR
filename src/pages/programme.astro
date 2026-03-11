@@ -1,0 +1,352 @@
+---
+// @ts-nocheck
+import Layout from "../layouts/Layout.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import { getAllArtistesSortedByDate } from "../../backend/backend.mjs";
+
+const representations = await getAllArtistesSortedByDate();
+
+const jourParam = Astro.url.searchParams.get("jour") || "Tous";
+const genreParam = Astro.url.searchParams.get("genre") || "Tous";
+const sceneParam = Astro.url.searchParams.get("scene") || "Toutes";
+
+let representationsFiltrees = representations;
+
+function getJourNumero(dateString) {
+  if (!dateString) return "";
+  return new Date(dateString).getDate().toString();
+}
+
+function formatJourLabel(dateString) {
+  if (!dateString) return "";
+  const date = new Date(dateString);
+
+  return date.toLocaleDateString("fr-FR", {
+    weekday: "long",
+    day: "numeric",
+  });
+}
+
+function getSceneFilterValue(sceneName) {
+  if (!sceneName) return "";
+
+  if (sceneName.includes("Main")) return "Main";
+  if (sceneName.includes("Dance")) return "Dance";
+  if (sceneName.includes("Chill")) return "Chill";
+
+  return sceneName;
+}
+
+if (jourParam !== "Tous") {
+  representationsFiltrees = representationsFiltrees.filter((rep) => {
+    return getJourNumero(rep.date_debut) === jourParam;
+  });
+}
+
+if (genreParam !== "Tous") {
+  representationsFiltrees = representationsFiltrees.filter((rep) => {
+    return rep.artiste?.genre === genreParam;
+  });
+}
+
+if (sceneParam !== "Toutes") {
+  representationsFiltrees = representationsFiltrees.filter((rep) => {
+    return getSceneFilterValue(rep.scene?.nom) === sceneParam;
+  });
+}
+
+function buildFilterUrl(newFilters) {
+  const params = new URLSearchParams();
+
+  const currentFilters = {
+    jour: jourParam,
+    genre: genreParam,
+    scene: sceneParam,
+    ...newFilters,
+  };
+
+  if (currentFilters.jour && currentFilters.jour !== "Tous") {
+    params.set("jour", currentFilters.jour);
+  }
+
+  if (currentFilters.genre && currentFilters.genre !== "Tous") {
+    params.set("genre", currentFilters.genre);
+  }
+
+  if (currentFilters.scene && currentFilters.scene !== "Toutes") {
+    params.set("scene", currentFilters.scene);
+  }
+
+  const query = params.toString();
+  return query ? `/programme?${query}` : "/programme";
+}
+---
+
+<Layout title="Programme">
+  <Header subtitle="Programme" />
+
+  <main>
+    <section class="filters-section">
+      <div class="filter-group">
+        <h2>Jour</h2>
+        <div class="filters">
+          <a
+            href={buildFilterUrl({ jour: "Tous" })}
+            class={`filter-btn ${jourParam === "Tous" ? "active" : ""}`}
+          >
+            Tous
+          </a>
+          <a
+            href={buildFilterUrl({ jour: "15" })}
+            class={`filter-btn ${jourParam === "15" ? "active" : ""}`}
+          >
+            Ven 15
+          </a>
+          <a
+            href={buildFilterUrl({ jour: "16" })}
+            class={`filter-btn ${jourParam === "16" ? "active" : ""}`}
+          >
+            Sam 16
+          </a>
+          <a
+            href={buildFilterUrl({ jour: "17" })}
+            class={`filter-btn ${jourParam === "17" ? "active" : ""}`}
+          >
+            Dim 17
+          </a>
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <h2>Genre</h2>
+        <div class="filters">
+          {["Tous", "Electro", "Pop", "Hip-Hop"].map((genre) => (
+            <a
+              href={buildFilterUrl({ genre })}
+              class={`filter-btn ${genreParam === genre ? "active" : ""}`}
+            >
+              {genre}
+            </a>
+          ))}
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <h2>Scène</h2>
+        <div class="filters">
+          {["Toutes", "Main", "Dance", "Chill"].map((scene) => (
+            <a
+              href={buildFilterUrl({ scene })}
+              class={`filter-btn ${sceneParam === scene ? "active" : ""}`}
+            >
+              {scene}
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="performances-section">
+      {representationsFiltrees.length > 0 ? (
+        representationsFiltrees.map((rep) => (
+          <article class="performance-card">
+            <div class="performance-content">
+              <div class="performance-info">
+                <h3>{rep.artiste?.nom || "Artiste inconnu"}</h3>
+                <div class="performance-details">
+                  <p>◉ {new Date(rep.date_debut).toLocaleTimeString('fr-FR', {hour: '2-digit', minute: '2-digit'})} - {new Date(rep.date_fin).toLocaleTimeString('fr-FR', {hour: '2-digit', minute: '2-digit'})}</p>
+                  <p>◉ {rep.scene?.nom || "Scène inconnue"}</p>
+                  <p class="performance-date">{formatJourLabel(rep.date_debut)}</p>
+                </div>
+              </div>
+              {rep.artiste?.genre && (
+                <span class={`genre-badge genre-${rep.artiste.genre.toLowerCase()}`}>
+                  {rep.artiste.genre}
+                </span>
+              )}
+            </div>
+          </article>
+        ))
+      ) : (
+        <p class="no-results">
+          Aucune représentation ne correspond aux filtres sélectionnés.
+        </p>
+      )}
+    </section>
+
+    <section class="download-section">
+      <a href="#" class="btn-download">
+        Télécharger le Programme PDF
+      </a>
+    </section>
+  </main>
+
+  <Footer />
+</Layout>
+
+<style>
+  main {
+    background: var(--color-bg-secondary);
+    padding: var(--spacing-xl) var(--spacing-md) var(--spacing-3xl);
+  }
+
+  .filters-section {
+    max-width: var(--max-width-lg);
+    margin: 0 auto var(--spacing-2xl);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xl);
+  }
+
+  .filter-group h2 {
+    font-size: var(--font-size-4xl);
+    font-weight: var(--font-weight-extrabold);
+    color: var(--color-text-primary);
+    margin-bottom: var(--spacing-md);
+  }
+
+  .filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+  }
+
+  .filter-btn {
+    padding: 0.75rem var(--spacing-md);
+    border-radius: var(--radius-full);
+    border: 2px solid var(--color-border-light);
+    background: var(--color-bg-primary);
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-semibold);
+    box-shadow: var(--shadow-xs);
+    transition: all var(--transition-base);
+  }
+
+  .filter-btn.active {
+    background: var(--color-cyan);
+    border-color: var(--color-cyan);
+    color: white;
+  }
+
+  .performances-section {
+    max-width: var(--max-width-xl);
+    margin: 0 auto;
+    display: grid;
+    gap: var(--spacing-md);
+  }
+
+  .performance-card {
+    background: var(--color-bg-primary);
+    border-radius: var(--radius-2xl);
+    padding: var(--spacing-md) var(--spacing-lg);
+    box-shadow: var(--shadow-md);
+  }
+
+  .performance-content {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--spacing-sm);
+  }
+
+  .performance-info h3 {
+    font-size: var(--font-size-3xl);
+    font-weight: var(--font-weight-extrabold);
+    color: var(--color-text-primary);
+    margin: 0 0 var(--spacing-xs) 0;
+  }
+
+  .performance-details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .performance-details p {
+    color: var(--color-text-tertiary);
+    font-size: var(--font-size-sm);
+    margin: 0;
+  }
+
+  .performance-date {
+    text-transform: capitalize;
+  }
+
+  .genre-badge {
+    padding: var(--spacing-xs) var(--spacing-md);
+    border-radius: var(--radius-full);
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-semibold);
+    color: white;
+    white-space: nowrap;
+  }
+
+  .genre-badge.genre-electro {
+    background: var(--color-cyan);
+  }
+
+  .genre-badge.genre-hip-hop {
+    background: var(--color-purple);
+  }
+
+  .genre-badge.genre-pop {
+    background: var(--color-purple-secondary);
+  }
+
+  .genre-badge.genre-rock {
+    background: var(--color-orange-primary);
+  }
+
+  .no-results {
+    background: var(--color-bg-primary);
+    padding: var(--spacing-lg);
+    border-radius: var(--radius-2xl);
+    text-align: center;
+    color: var(--color-text-tertiary);
+    font-size: var(--font-size-md);
+  }
+
+  .download-section {
+    max-width: var(--max-width-lg);
+    margin: var(--spacing-3xl) auto 0;
+    padding: 0 var(--spacing-md);
+  }
+
+  .btn-download {
+    display: block;
+    background: var(--color-orange-gradient);
+    color: white;
+    padding: var(--spacing-md) var(--spacing-xl);
+    border-radius: var(--radius-full);
+    text-align: center;
+    text-decoration: none;
+    font-size: var(--font-size-3xl);
+    font-weight: var(--font-weight-bold);
+    box-shadow: var(--shadow-md);
+    transition: transform var(--transition-base);
+  }
+
+  @media (min-width: 1024px) {
+    .performances-section {
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--spacing-lg);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .filter-group h2 {
+      font-size: var(--font-size-3xl);
+    }
+
+    .performance-info h3 {
+      font-size: var(--font-size-xl);
+    }
+
+    .btn-download {
+      font-size: var(--font-size-xl);
+    }
+  }
+</style>

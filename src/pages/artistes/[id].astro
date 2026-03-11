@@ -1,0 +1,242 @@
+---
+// @ts-nocheck
+import Layout from "../../layouts/Layout.astro";
+import Header from "../../components/Header.astro";
+import Footer from "../../components/Footer.astro";
+import PBImage from "../../components/PBImage.astro";
+import Carrousel from "../../components/Carrousel.astro";
+import { getArtisteById } from "../../../backend/backend.mjs";
+import pb from "../../../backend/backend.mjs";
+
+const { id } = Astro.params;
+const artiste = await getArtisteById(id);
+
+if (!artiste) {
+  throw new Error("Artiste introuvable");
+}
+
+const representations = artiste.representations || [];
+const firstRepresentation = representations[0] || null;
+const galerie = artiste.galerie || [];
+
+const sceneNom =
+  firstRepresentation?.expand?.scene?.nom || "Scène non définie";
+
+const dateTexte = firstRepresentation?.date_debut
+  ? new Date(firstRepresentation.date_debut).toLocaleDateString("fr-FR", {
+      weekday: "long",
+      day: "numeric",
+      month: "long",
+    })
+  : "Date non définie";
+
+const heureDebut = firstRepresentation?.date_debut
+  ? new Date(firstRepresentation.date_debut).toLocaleTimeString("fr-FR", {
+      hour: "2-digit",
+      minute: "2-digit",
+    })
+  : "";
+
+const heureFin = firstRepresentation?.date_fin
+  ? new Date(firstRepresentation.date_fin).toLocaleTimeString("fr-FR", {
+      hour: "2-digit",
+      minute: "2-digit",
+    })
+  : "";
+
+const heureTexte =
+  heureDebut && heureFin ? `${heureDebut} - ${heureFin}` : "Horaire non défini";
+
+const imagesGalerie = galerie.map((image, index) => ({
+  url: pb.files.getURL(artiste, image, { thumb: "1000x800" }),
+  alt: `${artiste.nom} - photo ${index + 1}`,
+}));
+---
+
+<Layout title={artiste.nom}>
+  <Header subtitle={artiste.nom} />
+
+  <main>
+    <section class="hero-section">
+      <div class="hero-image">
+        <PBImage record={artiste} filename={artiste.photo} alt={artiste.nom} />
+        <div class="hero-overlay">
+          <h1>{artiste.nom}</h1>
+        </div>
+      </div>
+    </section>
+
+    <section class="info-section">
+      <div class="info-card">
+        <h2>Info performance</h2>
+        <div class="info-details">
+          <p class="info-date">{dateTexte}</p>
+          <p class="info-scene">{sceneNom}</p>
+          <p class="info-time">{heureTexte}</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="bio-section">
+      <div class="bio-card">
+        <h2>Biographie</h2>
+        <div class="bio-text" set:html={artiste.description || "Aucune biographie disponible."} />
+      </div>
+    </section>
+
+    {
+      imagesGalerie.length > 0 && (
+        <section class="gallery-section">
+          <Carrousel images={imagesGalerie} />
+        </section>
+      )
+    }
+  </main>
+
+  <Footer />
+</Layout>
+
+<style>
+  main {
+    background: var(--color-bg-secondary);
+    padding-bottom: var(--spacing-3xl);
+  }
+
+  .hero-section {
+    max-width: var(--max-width-lg);
+    margin: 0 auto;
+  }
+
+  .hero-image {
+    position: relative;
+    height: 290px;
+    overflow: hidden;
+  }
+
+  .hero-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .hero-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
+    padding: var(--spacing-lg) var(--spacing-md);
+  }
+
+  .hero-overlay h1 {
+    color: white;
+    font-size: var(--font-size-6xl);
+    font-weight: var(--font-weight-extrabold);
+    margin: 0;
+  }
+
+  .info-section {
+    max-width: var(--max-width-lg);
+    margin: calc(var(--spacing-lg) * -1) auto 0;
+    padding: 0 var(--spacing-md);
+    position: relative;
+    z-index: 10;
+  }
+
+  .info-card {
+    background: var(--color-orange-gradient);
+    color: white;
+    padding: var(--spacing-lg);
+    border-radius: var(--radius-2xl);
+    box-shadow: var(--shadow-xl);
+  }
+
+  .info-card h2 {
+    font-size: var(--font-size-4xl);
+    font-weight: var(--font-weight-extrabold);
+    margin: 0 0 var(--spacing-sm) 0;
+  }
+
+  .info-details {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+  }
+
+  .info-details p {
+    font-size: var(--font-size-2xl);
+    margin: 0;
+  }
+
+  .info-date {
+    text-transform: capitalize;
+  }
+
+  .bio-section {
+    max-width: var(--max-width-lg);
+    margin: var(--spacing-2xl) auto 0;
+    padding: 0 var(--spacing-md);
+  }
+
+  .bio-card {
+    background: var(--color-bg-primary);
+    padding: var(--spacing-lg);
+    border-radius: var(--radius-2xl);
+    box-shadow: var(--shadow-md);
+  }
+
+  .bio-card h2 {
+    font-size: var(--font-size-5xl);
+    font-weight: var(--font-weight-extrabold);
+    color: var(--color-text-primary);
+    margin: 0 0 var(--spacing-md) 0;
+  }
+
+  .bio-card .bio-text {
+    font-size: var(--font-size-md);
+    line-height: 1.8;
+    color: var(--color-text-tertiary);
+  }
+
+  .bio-card .bio-text p {
+    margin: 0 0 var(--spacing-sm) 0;
+  }
+
+  .bio-card .bio-text p:last-child {
+    margin-bottom: 0;
+  }
+
+  .gallery-section {
+    max-width: var(--max-width-lg);
+    margin: var(--spacing-2xl) auto 0;
+    padding: 0 var(--spacing-md);
+  }
+
+  @media (min-width: 1024px) {
+    .hero-image {
+      height: 360px;
+    }
+
+    .hero-overlay h1 {
+      font-size: 4rem;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .hero-overlay h1 {
+      font-size: var(--font-size-5xl);
+    }
+
+    .info-card h2 {
+      font-size: var(--font-size-2xl);
+    }
+
+    .info-details p {
+      font-size: var(--font-size-lg);
+    }
+
+    .bio-card h2 {
+      font-size: var(--font-size-4xl);
+    }
+  }
+</style>

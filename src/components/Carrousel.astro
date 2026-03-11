@@ -1,0 +1,165 @@
+---
+// @ts-nocheck
+interface Props {
+  images: Array<{ url: string; alt: string }>;
+}
+
+const { images } = Astro.props;
+const id = `carrousel-${Math.random().toString(36).substr(2, 9)}`;
+---
+
+<div class="carrousel" id={id}>
+  <div class="carrousel-container">
+    {images.map((image, index) => (
+      <div class="carrousel-item" data-active={index === 0}>
+        <img src={image.url} alt={image.alt} />
+      </div>
+    ))}
+  </div>
+
+  {images.length > 1 && (
+    <>
+      <button class="carrousel-btn carrousel-btn-prev" aria-label="Image précédente">
+        ‹
+      </button>
+      <button class="carrousel-btn carrousel-btn-next" aria-label="Image suivante">
+        ›
+      </button>
+
+      <div class="carrousel-indicators">
+        {images.map((_, index) => (
+          <button
+            class="carrousel-indicator"
+            data-index={index}
+            aria-label={`Aller à l'image ${index + 1}`}
+            data-active={index === 0}
+          />
+        ))}
+      </div>
+    </>
+  )}
+</div>
+
+<style>
+  .carrousel {
+    position: relative;
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    border-radius: 10px;
+    background-color: #000;
+  }
+
+  .carrousel-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+
+  .carrousel-item {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+  }
+
+  .carrousel-item[data-active="true"] {
+    opacity: 1;
+    z-index: 1;
+  }
+
+  .carrousel-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .carrousel-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(255, 255, 255, 0.8);
+    border: none;
+    font-size: 2rem;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    z-index: 2;
+  }
+
+  .carrousel-btn-prev {
+    left: 1rem;
+  }
+
+  .carrousel-btn-next {
+    right: 1rem;
+  }
+
+  .carrousel-indicators {
+    position: absolute;
+    bottom: 1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 0.5rem;
+    z-index: 2;
+  }
+
+  .carrousel-indicator {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 2px solid white;
+    background-color: rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .carrousel-indicator[data-active="true"] {
+    background-color: white;
+  }
+</style>
+
+<script>
+  // @ts-nocheck
+  document.addEventListener('DOMContentLoaded', () => {
+    const carrousels = document.querySelectorAll('.carrousel');
+
+    carrousels.forEach((carrousel) => {
+      const items = carrousel.querySelectorAll('.carrousel-item');
+      const indicators = carrousel.querySelectorAll('.carrousel-indicator');
+      const prevBtn = carrousel.querySelector('.carrousel-btn-prev');
+      const nextBtn = carrousel.querySelector('.carrousel-btn-next');
+
+      let currentIndex = 0;
+
+      function showSlide(index) {
+        items.forEach((item, i) => {
+          item.setAttribute('data-active', String(i === index));
+        });
+        indicators.forEach((indicator, i) => {
+          indicator.setAttribute('data-active', String(i === index));
+        });
+        currentIndex = index;
+      }
+
+      function nextSlide() {
+        const newIndex = (currentIndex + 1) % items.length;
+        showSlide(newIndex);
+      }
+
+      function prevSlide() {
+        const newIndex = (currentIndex - 1 + items.length) % items.length;
+        showSlide(newIndex);
+      }
+
+      prevBtn?.addEventListener('click', prevSlide);
+      nextBtn?.addEventListener('click', nextSlide);
+
+      indicators.forEach((indicator, index) => {
+        indicator.addEventListener('click', () => showSlide(index));
+      });
+      });
+    });
+</script>

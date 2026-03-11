@@ -1,0 +1,361 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<Layout title="Infos Pratiques - SAVOU'FEST">
+  <Header subtitle="Infos Pratiques" />
+
+  <main>
+    <!-- Section Tarifs & Billetterie -->
+    <section class="section-tarifs">
+      <h2 class="section-title"><img src="/Tarifs & Billetterie.png" alt="Tarifs" class="section-icon" /> Tarifs & Billetterie</h2>
+      
+      <div class="tarifs-grid">
+        <div class="tarif-card">
+          <h3>Pass 1 Jour</h3>
+          <p class="price">45€</p>
+          <p class="description">Accès à toutes les scènes pour 1 jour</p>
+        </div>
+
+        <div class="tarif-card tarif-featured">
+          <h3>Pass 3 Jours</h3>
+          <p class="price">110€</p>
+          <p class="description">Accès complet au festival</p>
+        </div>
+
+        <div class="tarif-card">
+          <h3>Pass VIP 3 Jours</h3>
+          <p class="price">250€</p>
+          <p class="description">Accès VIP + backstage + goodies</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section Hébergements -->
+    <section class="section-hebergements">
+      <h2 class="section-title"><img src="/Hébergement.png" alt="Hébergement" class="section-icon" /> Hébergements</h2>
+      
+      <div class="hebergements-grid">
+        <div class="hebergement-card">
+          <h3>Camping Festival</h3>
+          <p class="price-info">À partir de 20€/nuit</p>
+          <p class="detail">Sur place, à 2 min à pied</p>
+        </div>
+
+        <div class="hebergement-card">
+          <h3>Hôtels Partenaires</h3>
+          <p class="price-info">À partir de 60€/nuit</p>
+          <p class="detail">À 10-15 min en transport</p>
+        </div>
+
+        <div class="hebergement-card">
+          <h3>Auberges de Jeunesse</h3>
+          <p class="price-info">À partir de 25€/nuit</p>
+          <p class="detail">Centre-ville, 20 min</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section Transports -->
+    <section class="section-transports">
+      <h2 class="section-title"><img src="/Transports.png" alt="Transports" class="section-icon" /> Transports</h2>
+      
+      <div class="transports-grid">
+        <div class="transport-card">
+          <div class="transport-icon"><img src="/Transports.png" alt="Transport" /></div>
+          <h3>Navettes Gratuites</h3>
+          <p>Depuis la gare et principaux hôtels</p>
+        </div>
+
+        <div class="transport-card">
+          <div class="transport-icon"><img src="/Transports.png" alt="Transport" /></div>
+          <h3>Métro Ligne 5</h3>
+          <p>Arrêt direct de Paris et 5 min à pied</p>
+        </div>
+
+        <div class="transport-card">
+          <div class="transport-icon"><img src="/Transports.png" alt="Transport" /></div>
+          <h3>Parking Gratuit</h3>
+          <p>1000 places disponibles sur site</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section Questions Fréquentes -->
+    <section class="section-faq">
+      <h2 class="section-title">Questions Fréquentes</h2>
+      
+      <div class="faq-list">
+        <details class="faq-item">
+          <summary>Peut-on entrer et sortir du fest ?<span class="chevron">›</span></summary>
+          <p>Oui, avec votre bracelet vous pouvez entrer et sortir librement pendant toute la durée du festival.</p>
+        </details>
+
+        <details class="faq-item">
+          <summary>La nourriture est-elle autorisée ?<span class="chevron">›</span></summary>
+          <p>Oui, vous pouvez apporter vos propres collations. Des stands de restauration sont également disponibles sur place avec des options variées.</p>
+        </details>
+
+        <details class="faq-item">
+          <summary>Quel est l'âge minimum ?<span class="chevron">›</span></summary>
+          <p>Les moins de 12 ans entrent gratuitement accompagnés d'un adulte. Une zone famille est aménagée pour leur confort.</p>
+        </details>
+
+        <details class="faq-item">
+          <summary>Paiements par carte ?<span class="chevron">›</span></summary>
+          <p>Oui, tous les stands acceptent la carte bancaire et le paiement sans contact. Des distributeurs sont également disponibles.</p>
+        </details>
+
+        <details class="faq-item">
+          <summary>Des consignes pour les bagages ?<span class="chevron">›</span></summary>
+          <p>Oui, des consignes sécurisées sont disponibles à l'entrée du festival pour 5€ par jour.</p>
+        </details>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</Layout>
+
+<style>
+  main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+    background: #f5f5f5;
+  }
+
+  .section-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    color: #000;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .section-icon {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+  }
+
+  section {
+    margin-bottom: 3rem;
+  }
+
+  .section-tarifs {
+    background: white;
+    padding: 2rem;
+    border-radius: 20px;
+  }
+
+  .tarifs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .tarif-card {
+    background: white;
+    border: 2px solid #e0e0e0;
+    border-radius: 20px;
+    padding: 2rem 1.5rem;
+    text-align: center;
+  }
+
+  .tarif-featured {
+    background: linear-gradient(135deg, #ff9a3c 0%, #ff6b3c 100%);
+    color: white;
+    border: none;
+  }
+
+  .tarif-card h3 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+  }
+
+  .tarif-card .price {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+  }
+
+  .tarif-card .description {
+    font-size: 0.9rem;
+    opacity: 0.9;
+  }
+
+  .section-hebergements {
+    padding: 0;
+  }
+
+  .hebergements-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .hebergement-card {
+    background: white;
+    border-radius: 20px;
+    padding: 2rem 1.5rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  }
+
+  .hebergement-card h3 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+    color: #000;
+  }
+
+  .hebergement-card .price-info {
+    color: #ff9a3c;
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+
+  .hebergement-card .detail {
+    font-size: 0.9rem;
+    color: #666;
+  }
+
+  .section-transports {
+    padding: 0;
+  }
+
+  .transports-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .transport-card {
+    background: white;
+    border-radius: 20px;
+    padding: 2rem 1.5rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    text-align: center;
+  }
+
+  .transport-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .transport-icon img {
+    width: 48px;
+    height: 48px;
+    object-fit: contain;
+  }
+
+  .transport-card h3 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: #000;
+  }
+
+  .transport-card p {
+    font-size: 0.9rem;
+    color: #666;
+  }
+
+  .section-faq {
+    padding: 0;
+  }
+
+  .faq-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .faq-item {
+    background: white;
+    border-radius: 15px;
+    padding: 0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+  }
+
+  .faq-item summary {
+    padding: 1.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .faq-item summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .chevron {
+    color: #00d4d4;
+    font-size: 1.5rem;
+    font-weight: 700;
+    transition: transform 0.3s ease;
+  }
+
+  .faq-item[open] .chevron {
+    transform: rotate(90deg);
+  }
+
+  .faq-item p {
+    padding: 0 1.5rem 1.5rem 1.5rem;
+    color: #666;
+    line-height: 1.6;
+  }
+
+  @media (max-width: 768px) {
+    main {
+      padding: 1rem;
+    }
+
+    .tarifs-grid,
+    .hebergements-grid,
+    .transports-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .section-title {
+      font-size: 1.25rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    main {
+      max-width: 1000px;
+      padding: 3rem 2rem;
+    }
+
+    .tarifs-grid {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .hebergements-grid,
+    .transports-grid {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .faq-list {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+  }
+</style>

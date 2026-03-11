@@ -1,0 +1,27 @@
+---
+import { pb } from "../backendd.mjs";
+
+const {
+  record,
+  filename,
+  alt = "",
+  thumb = "",
+  class: className = ""
+} = Astro.props;
+
+let imageUrl = "";
+
+if (record && filename) {
+  imageUrl = thumb
+    ? pb.files.getURL(record, filename, { thumb })
+    : pb.files.getURL(record, filename);
+}
+---
+
+{imageUrl && (
+  <img
+    src={imageUrl}
+    alt={alt}
+    class={className}
+  />
+)}

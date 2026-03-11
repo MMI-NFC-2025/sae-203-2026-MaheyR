@@ -1,0 +1,203 @@
+---
+// @ts-nocheck
+import Layout from "../../layouts/Layout.astro";
+import Header from "../../components/Header.astro";
+import Footer from "../../components/Footer.astro";
+import PBImage from "../../components/PBImage.astro";
+import { getSceneById } from "../../../backend/backend.mjs";
+
+const { id } = Astro.params;
+const scene = await getSceneById(id);
+
+if (!scene) {
+  throw new Error("Scène introuvable");
+}
+
+const representations = scene.representations || [];
+---
+
+<Layout title={scene.nom}>
+  <Header subtitle={scene.nom} />
+
+  <main>
+    <section class="scene-header">
+      <div class="scene-image-wrapper">
+        <PBImage
+          record={scene}
+          filename={scene.photo}
+          alt={scene.nom}
+        />
+      </div>
+      <div class="scene-header-info">
+        <h1>{scene.nom}</h1>
+        <p class="scene-location">{scene.localisation}</p>
+        <p class="scene-capacity">Capacité : {scene.capacite} places</p>
+      </div>
+    </section>
+
+    <section class="scene-description">
+      <h2>Description</h2>
+      <div class="description-text" set:html={scene.description} />
+    </section>
+
+    <section class="scene-programmation">
+      <h2>Artistes programmés sur cette scène</h2>
+
+      <div class="artistes-list">
+        {representations.length > 0 ? (
+          representations.map((representation) => (
+            <article class="artiste-item">
+              <h3>{representation.expand?.artiste?.nom}</h3>
+              <p class="date-info">Du {new Date(representation.date_debut).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' })}</p>
+              <p class="date-info">Au {new Date(representation.date_fin).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' })}</p>
+              <a href={`/artistes/${representation.expand?.artiste?.id}`} class="voir-artiste">
+                Voir la fiche artiste →
+              </a>
+            </article>
+          ))
+        ) : (
+          <p class="no-artistes">Aucun artiste programmé sur cette scène.</p>
+        )}
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</Layout>
+
+<style>
+  main {
+    background: var(--color-bg-secondary);
+    padding: var(--spacing-lg) var(--spacing-md) var(--spacing-3xl);
+  }
+
+  section {
+    background: var(--color-bg-primary);
+    padding: var(--spacing-lg);
+    border-radius: var(--radius-2xl);
+    margin-bottom: var(--spacing-lg);
+    box-shadow: var(--shadow-md);
+  }
+
+  .scene-header {
+    max-width: var(--max-width-lg);
+    margin: 0 auto var(--spacing-lg);
+  }
+
+  .scene-image-wrapper {
+    margin-bottom: var(--spacing-md);
+  }
+
+  .scene-image-wrapper img {
+    width: 100%;
+    height: auto;
+    max-height: 400px;
+    object-fit: cover;
+    border-radius: var(--radius-lg);
+  }
+
+  .scene-header-info h1 {
+    font-size: var(--font-size-5xl);
+    font-weight: var(--font-weight-extrabold);
+    color: var(--color-text-primary);
+    margin: 0 0 var(--spacing-sm) 0;
+  }
+
+  .scene-location {
+    font-size: var(--font-size-xl);
+    color: var(--color-text-muted);
+    margin: 0 0 var(--spacing-xs) 0;
+  }
+
+  .scene-capacity {
+    font-size: var(--font-size-lg);
+    color: var(--color-text-secondary);
+    font-weight: var(--font-weight-semibold);
+    margin: 0;
+  }
+
+  .scene-description,
+  .scene-programmation {
+    max-width: var(--max-width-lg);
+    margin: 0 auto var(--spacing-lg);
+  }
+
+  section h2 {
+    font-size: var(--font-size-4xl);
+    font-weight: var(--font-weight-extrabold);
+    color: var(--color-text-primary);
+    margin: 0 0 var(--spacing-md) 0;
+  }
+
+  .scene-description .description-text {
+    font-size: var(--font-size-md);
+    line-height: 1.8;
+    color: var(--color-text-tertiary);
+  }
+
+  .scene-description .description-text p {
+    margin: 0 0 var(--spacing-sm) 0;
+  }
+
+  .scene-description .description-text p:last-child {
+    margin-bottom: 0;
+  }
+
+  .artistes-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+  }
+
+  .artiste-item {
+    background: var(--color-bg-tertiary);
+    padding: var(--spacing-md);
+    border-radius: var(--radius-lg);
+  }
+
+  .artiste-item h3 {
+    font-size: var(--font-size-2xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text-primary);
+    margin: 0 0 var(--spacing-xs) 0;
+  }
+
+  .date-info {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-tertiary);
+    margin: 0.25rem 0;
+  }
+
+  .voir-artiste {
+    display: inline-block;
+    margin-top: var(--spacing-xs);
+    color: var(--color-cyan);
+    text-decoration: none;
+    font-weight: var(--font-weight-semibold);
+    font-size: var(--font-size-base);
+    transition: opacity var(--transition-base);
+  }
+
+  .no-artistes {
+    text-align: center;
+    color: var(--color-text-muted);
+    font-size: var(--font-size-md);
+    padding: var(--spacing-lg);
+  }
+
+  @media (min-width: 1024px) {
+    main {
+      padding: var(--spacing-2xl) var(--spacing-md) var(--spacing-3xl);
+    }
+
+    .scene-header-info h1 {
+      font-size: 4rem;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .scene-header-info h1 {
+      font-size: var(--font-size-4xl);
+    }
+  }
+</style>

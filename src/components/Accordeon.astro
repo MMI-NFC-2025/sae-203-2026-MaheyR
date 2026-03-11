@@ -1,0 +1,85 @@
+---
+interface Props {
+  titre: string;
+  ouvert?: boolean;
+}
+
+const { titre, ouvert = false } = Astro.props;
+const id = `accordeon-${Math.random().toString(36).substr(2, 9)}`;
+---
+
+<div class="accordeon" data-ouvert={ouvert}>
+  <button class="accordeon-header" aria-expanded={ouvert} aria-controls={id}>
+    <span>{titre}</span>
+    <span class="accordeon-icon">▼</span>
+  </button>
+  <div class="accordeon-content" id={id}>
+    <div class="accordeon-body">
+      <slot />
+    </div>
+  </div>
+</div>
+
+<style>
+  .accordeon {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-bottom: 0.5rem;
+    overflow: hidden;
+  }
+
+  .accordeon-header {
+    width: 100%;
+    padding: 1rem;
+    background-color: #f8f9fa;
+    border: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    font-size: 1.1rem;
+    font-weight: 600;
+    text-align: left;
+  }
+
+  .accordeon-icon {
+    transition: transform 0.3s ease;
+    color: #007bff;
+    font-size: 0.8rem;
+  }
+
+  .accordeon[data-ouvert="true"] .accordeon-icon {
+    transform: rotate(180deg);
+  }
+
+  .accordeon-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+  }
+
+  .accordeon[data-ouvert="true"] .accordeon-content {
+    max-height: 2000px;
+  }
+
+  .accordeon-body {
+    padding: 1rem;
+    background-color: white;
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const accordeons = document.querySelectorAll('.accordeon');
+
+    accordeons.forEach((accordeon) => {
+      const header = accordeon.querySelector('.accordeon-header');
+      
+      header?.addEventListener('click', () => {
+        const isOuvert = accordeon.getAttribute('data-ouvert') === 'true';
+        accordeon.setAttribute('data-ouvert', String(!isOuvert));
+        header.setAttribute('aria-expanded', String(!isOuvert));
+      });
+    });
+  });
+</script>

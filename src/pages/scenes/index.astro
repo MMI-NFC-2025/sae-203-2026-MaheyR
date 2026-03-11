@@ -1,0 +1,162 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Header from "../../components/Header.astro";
+import Footer from "../../components/Footer.astro";
+import PBImage from "../../components/PBImage.astro";
+import { getAllScenesSortedByName } from "../../../backend/backend.mjs";
+
+const scenes = await getAllScenesSortedByName();
+---
+
+<Layout title="Scènes">
+  <Header subtitle="Scènes" />
+
+  <main>
+    <section class="header-section">
+      <h2>Liste des scènes</h2>
+    </section>
+
+    <section class="scenes-grid">
+      {scenes.length > 0 ? (
+        scenes.map((scene) => (
+          <article class="scene-card">
+            <a href={`/scenes/${scene.id}`}>
+              <div class="scene-image">
+                <PBImage
+                  record={scene}
+                  filename={scene.photo}
+                  alt={scene.nom}
+                />
+                <span class="capacity-badge">
+                  {scene.capacite} places
+                </span>
+              </div>
+
+              <div class="scene-info">
+                <h3>{scene.nom}</h3>
+                <p class="scene-location">{scene.localisation}</p>
+                <div class="scene-description" set:html={scene.description} />
+              </div>
+            </a>
+          </article>
+        ))
+      ) : (
+        <p class="no-results">
+          Aucune scène disponible.
+        </p>
+      )}
+    </section>
+  </main>
+
+  <Footer />
+</Layout>
+
+<style>
+  main {
+    background: var(--color-bg-secondary);
+    padding: var(--spacing-xl) var(--spacing-md) var(--spacing-3xl);
+  }
+
+  .header-section {
+    max-width: var(--max-width-lg);
+    margin: 0 auto var(--spacing-xl);
+  }
+
+  .header-section h2 {
+    font-size: var(--font-size-4xl);
+    font-weight: var(--font-weight-extrabold);
+    color: var(--color-text-primary);
+  }
+
+  .scenes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: var(--spacing-lg);
+    max-width: var(--max-width-3xl);
+    margin: 0 auto;
+  }
+
+  .scene-card {
+    background: var(--color-bg-primary);
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+    transition: transform var(--transition-base);
+  }
+
+  .scene-card a {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .scene-image {
+    position: relative;
+    height: 250px;
+    overflow: hidden;
+  }
+
+  .scene-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .capacity-badge {
+    position: absolute;
+    top: var(--spacing-sm);
+    right: var(--spacing-sm);
+    background: var(--color-cyan);
+    color: white;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--radius-full);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+  }
+
+  .scene-info {
+    padding: var(--spacing-md);
+  }
+
+  .scene-info h3 {
+    font-size: var(--font-size-2xl);
+    font-weight: var(--font-weight-extrabold);
+    color: var(--color-text-primary);
+    margin: 0 0 var(--spacing-xs) 0;
+  }
+
+  .scene-location {
+    color: var(--color-text-muted);
+    font-size: var(--font-size-sm);
+    margin: 0 0 var(--spacing-xs) 0;
+  }
+
+  .scene-description {
+    color: var(--color-text-tertiary);
+    font-size: var(--font-size-sm);
+    margin: 0;
+    line-height: 1.5;
+  }
+
+  .no-results {
+    grid-column: 1 / -1;
+    background: var(--color-bg-primary);
+    padding: var(--spacing-lg);
+    border-radius: var(--radius-2xl);
+    text-align: center;
+    color: var(--color-text-tertiary);
+    font-size: var(--font-size-md);
+  }
+
+  @media (min-width: 1024px) {
+    .scenes-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .scenes-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
