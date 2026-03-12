@@ -75,8 +75,6 @@ export async function getArtisteById(id) {
   }
 }
 
-
-
 export async function getSceneById(id) {
   let scene
 
